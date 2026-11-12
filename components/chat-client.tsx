@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ChatMessage, SalonSnapshot } from "@/lib/types";
+import { ChatMarkdown } from "@/components/chat-markdown";
 import { getGoogleConnectUrl } from "@/lib/config";
+import { formatVisitWhen } from "@/lib/pacific";
+import type { ChatMessage, SalonSnapshot } from "@/lib/types";
 
 const POLL_MS = 2500;
 
@@ -80,18 +82,24 @@ export function ChatClient({
         <p className="eyebrow">Front desk</p>
         <h2 className="card-title">Tell us who needs a bath</h2>
         <p className="muted">
-          Same dogs and visits as the form. Calendar and cancel each wait for you.
+          Pacific time. One small question at a time — say tomorrow at 11:30.
         </p>
 
-        <div className="chat-log" style={{ marginTop: 18 }}>
+        <div className="chat-log" style={{ marginTop: 14 }}>
           {messages.length === 0 ? (
             <div className="empty">
-              Try: “Book Barnaby for a full groom tomorrow at 10.”
+              Try: “Book Barnaby tomorrow at 11:30.”
             </div>
           ) : (
             messages.map((message) => (
               <div key={message.id}>
-                <div className={`bubble ${message.role}`}>{message.content}</div>
+                <div className={`bubble ${message.role}`}>
+                  {message.role === "assistant" ? (
+                    <ChatMarkdown text={message.content} />
+                  ) : (
+                    message.content
+                  )}
+                </div>
                 {message.meta?.kind === "token_vault" ? (
                   <TokenVaultPause
                     connectUrl={message.meta.connectUrl ?? getGoogleConnectUrl("/chat")}
@@ -158,7 +166,7 @@ export function ChatClient({
                     {a.dogName} · {a.serviceId}
                   </strong>
                   <span className="muted">
-                    {a.visitDate} at {a.visitTime}
+                    {formatVisitWhen(a.visitDate, a.visitTime)}
                   </span>
                   {a.status === "cancel_pending" ? (
                     <span className="badge badge-terracotta">Waiting on email</span>

@@ -7,7 +7,7 @@ import { listDogs } from "@/lib/dogs";
 import { isGoogleConnected } from "@/lib/google";
 import type { ChatMessage } from "@/lib/types";
 
-const MAX_OUTPUT_TOKENS = 4000;
+const MAX_OUTPUT_TOKENS = 280;
 const MAX_TURNS = 8;
 
 export async function runSalonAgent(

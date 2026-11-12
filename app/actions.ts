@@ -38,16 +38,42 @@ export async function deleteDogAction(formData: FormData) {
   revalidatePath("/book");
 }
 
+function composeBookingNotes(formData: FormData): string {
+  const lines = [
+    String(formData.get("notes") ?? "").trim(),
+    `Day-of phone: ${String(formData.get("phone") ?? "").trim()}`,
+    `Reach by: ${String(formData.get("reachBy") ?? "").trim()}`,
+    `Drop-off: ${String(formData.get("dropOff") ?? "").trim()}`,
+  ];
+  const altDate = String(formData.get("altDate") ?? "").trim();
+  if (altDate) lines.push(`Second-choice date: ${altDate}`);
+  const lastGroomed = String(formData.get("lastGroomed") ?? "").trim();
+  if (lastGroomed) lines.push(`Last groomed: ${lastGroomed}`);
+  if (formData.get("vaccines") === "yes") lines.push("Vaccines: current");
+  if (formData.get("cancelAck") === "yes") {
+    lines.push("Cancel policy: email confirmation acknowledged");
+  }
+  return lines.filter(Boolean).join(" · ");
+}
+
 export async function bookAppointmentAction(formData: FormData) {
   const { sub } = await requireSub();
   const dogId = String(formData.get("dogId") ?? "");
   const serviceId = String(formData.get("serviceId") ?? "");
   const visitDate = String(formData.get("date") ?? "");
   const visitTime = String(formData.get("time") ?? "");
-  const notes = String(formData.get("notes") ?? "").trim();
-  if (!dogId || !serviceId || !visitDate || !visitTime) {
-    throw new Error("Pick a dog, a service, a date, and a time slot.");
+  const phone = String(formData.get("phone") ?? "").trim();
+  const dropOff = String(formData.get("dropOff") ?? "").trim();
+  const vaccines = formData.get("vaccines") === "yes";
+  const cancelAck = formData.get("cancelAck") === "yes";
+  const altDate = String(formData.get("altDate") ?? "").trim();
+  if (!dogId || !serviceId || !visitDate || !visitTime || !phone || !dropOff || !altDate) {
+    throw new Error("Please complete every required field on the booking form.");
   }
+  if (!vaccines || !cancelAck) {
+    throw new Error("Please confirm vaccines and the cancellation email.");
+  }
+  const notes = composeBookingNotes(formData);
   await bookAppointment(sub, { dogId, serviceId, visitDate, visitTime, notes });
   revalidatePath("/book");
 }

@@ -9,6 +9,9 @@ export function DogPanel({ dogs }: { dogs: Dog[] }) {
         <div>
           <p className="eyebrow">Your dogs</p>
           <h2 className="card-title">On the roster</h2>
+          <p className="muted" style={{ margin: "6px 0 0" }}>
+            Every dog needs a card before the book will hold a table.
+          </p>
         </div>
         <form action={addSampleDogAction}>
           <button className="btn btn-ghost btn-small" type="submit">

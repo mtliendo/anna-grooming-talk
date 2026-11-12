@@ -27,9 +27,9 @@ function BookView({
           Book a <em>visit</em>
         </h1>
         <p className="lede">
-          Register your dogs, then choose Bath &amp; Brush, Full Groom, or Nail
-          Trim. If you cancel, we email you first — the visit stays until you
-          accept.
+          Register your dogs, then complete the visit request — service, two
+          dates, a Pacific time slot, and day-of details. If you cancel, we
+          email you first; the visit stays until you accept.
         </p>
       </header>
       <div className="grid-2 book-grid">
