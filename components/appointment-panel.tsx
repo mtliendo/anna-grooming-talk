@@ -24,7 +24,7 @@ export function AppointmentPanel({
       <h2 className="card-title">Hold a table</h2>
       <p className="muted">
         Cancel sends an email confirmation. The visit stays on the book until
-        you accept — we never drop it from a chat yes.
+        you accept — a chat “yes” is never enough to cancel.
       </p>
 
       <form action={bookAppointmentAction} className="stack" style={{ marginTop: 18 }}>
