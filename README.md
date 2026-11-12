@@ -37,13 +37,13 @@ Email/password or **Continue with Google**. Login scopes are `openid profile ema
 
 ![Classic booking form](./public/screenshots/02-booking-form.jpg)
 
-Register a dog (Barnaby in one click for the live demo), then book Bath & Brush, Full Groom, or Nail Trim.
+Register a dog (Barnaby in one click for the live demo), then work through the visit request — service, two dates, a Pacific time slot, and day-of details. The “before.”
 
 ### 3. Chatbot booking
 
 ![Chatbot booking](./public/screenshots/03-chatbot-booking.jpg)
 
-Same roster and appointments as the form. Try: *Book Barnaby for a full groom tomorrow at 10.*
+Same roster and appointments as the form, as a short back-and-forth in Pacific time. Try: *Book Barnaby tomorrow at 11:30.* One small question per turn — not a wall of text.
 
 ### 4. Token Vault permission pause
 

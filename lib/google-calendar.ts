@@ -1,4 +1,5 @@
 import { AccessTokenForConnectionError } from "@auth0/nextjs-auth0/errors";
+import { SALON_TZ, addMinutesCivil, pacificDateTime } from "@/lib/pacific";
 import { getService } from "@/lib/services";
 import type { Appointment } from "@/lib/types";
 
@@ -38,15 +39,12 @@ export function explainCalendarError(error: unknown): string {
 function appointmentDateTimes(appointment: Appointment) {
   const service = getService(appointment.serviceId);
   const durationMin = service?.durationMin ?? 45;
-  const start = new Date(`${appointment.visitDate}T${appointment.visitTime}:00`);
-  const end = new Date(start.getTime() + durationMin * 60 * 1000);
-  const timeZone =
-    Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Los_Angeles";
+  const end = addMinutesCivil(appointment.visitDate, appointment.visitTime, durationMin);
 
   return {
-    start: start.toISOString(),
-    end: end.toISOString(),
-    timeZone,
+    start: pacificDateTime(appointment.visitDate, appointment.visitTime),
+    end: pacificDateTime(end.date, end.time),
+    timeZone: SALON_TZ,
     service,
   };
 }
@@ -71,6 +69,7 @@ export async function createAppointmentReminder(
       summary,
       description: [
         "Anna's Dog Grooming appointment",
+        "Times are Pacific (America/Los_Angeles).",
         service ? `${service.name} · $${service.price} · ${service.durationMin}m` : appointment.serviceId,
         appointment.notes ? `Notes: ${appointment.notes}` : null,
         "Written via Auth0 Token Vault — this app never stored your Google refresh token.",

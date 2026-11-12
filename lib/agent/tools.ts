@@ -11,6 +11,7 @@ import { addDog, findDogByName, listDogs } from "@/lib/dogs";
 import { getGoogleConnectUrl } from "@/lib/config";
 import { getGoogleAccessToken, isGoogleConnected } from "@/lib/google";
 import { createAppointmentReminder } from "@/lib/google-calendar";
+import { formatVisitWhen, resolveVisitWhen } from "@/lib/pacific";
 import { getService, parseServiceHint } from "@/lib/services";
 import type { ChatMeta } from "@/lib/types";
 
@@ -55,7 +56,7 @@ export function salonTools(actor: { sub: string }, events: ToolEvent[]) {
         return appointments
           .map((a) => {
             const service = getService(a.serviceId)?.name ?? a.serviceId;
-            return `${a.dogName} · ${service} on ${a.visitDate} at ${a.visitTime} (id=${a.id}, status=${a.status})`;
+            return `${a.dogName} · ${service} on ${formatVisitWhen(a.visitDate, a.visitTime)} (id=${a.id}, status=${a.status})`;
           })
           .join("\n");
       },
@@ -69,11 +70,21 @@ export function salonTools(actor: { sub: string }, events: ToolEvent[]) {
         serviceId: z
           .string()
           .describe("bath-brush | full-groom | nail-trim (or a natural phrase)"),
-        visitDate: z.string().describe("YYYY-MM-DD"),
-        visitTime: z.string().describe("HH:MM 24h slot"),
+        visitDate: z
+          .string()
+          .describe(
+            "The visit date as the customer said it (tomorrow, Friday, November 15). Converted to Pacific / California. Never ask them for a machine date format.",
+          ),
+        visitTime: z
+          .string()
+          .describe(
+            "The visit time as spoken, e.g. 11:30 AM. All slots are Pacific (America/Los_Angeles).",
+          ),
         notes: z.string().optional(),
       }),
       execute: async ({ dogName, serviceId, visitDate, visitTime, notes }) => {
+        const when = resolveVisitWhen(visitDate, visitTime);
+        if (!when.ok) return when.error;
         const resolvedService = getService(serviceId)?.id ?? parseServiceHint(serviceId);
         if (!resolvedService) {
           return "Unknown service. Use Bath & Brush, Full Groom, or Nail Trim.";
@@ -91,15 +102,16 @@ export function salonTools(actor: { sub: string }, events: ToolEvent[]) {
         const appointment = await bookAppointment(actor.sub, {
           dogId: dog.id,
           serviceId: resolvedService,
-          visitDate,
-          visitTime,
+          visitDate: when.date,
+          visitTime: when.time,
           notes,
         });
         events.push({ kind: "booked", appointmentId: appointment.id });
         const service = getService(resolvedService);
+        const whenLabel = formatVisitWhen(when.date, when.time);
         return [
-          `Booked ${service?.name ?? resolvedService} for ${dog.name} on ${visitDate} at ${visitTime} (id=${appointment.id}).`,
-          "Ask if they want this on Google Calendar. If they say yes, call add_calendar_event with this appointment id.",
+          `Booked ${service?.name ?? resolvedService} for ${dog.name} on ${whenLabel} (id=${appointment.id}).`,
+          "Tell them that Pacific time in a short sentence. Then ask if they want this on Google Calendar. If they say yes, call add_calendar_event with this appointment id.",
         ].join(" ");
       },
     }),

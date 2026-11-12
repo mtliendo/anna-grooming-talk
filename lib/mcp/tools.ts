@@ -8,6 +8,7 @@ import {
   listAppointments,
 } from "@/lib/appointments";
 import { requestCancelAppointment } from "@/lib/ciba-cancel";
+import { formatVisitWhen, resolveVisitWhen } from "@/lib/pacific";
 import { getService, parseServiceHint } from "@/lib/services";
 
 const emptySchema = {} as const;
@@ -23,8 +24,12 @@ const bookSchema = {
   service: z
     .string()
     .describe("bath-brush | full-groom | nail-trim or a natural phrase"),
-  date: z.string().describe("YYYY-MM-DD"),
-  time: z.string().describe("HH:MM 24h"),
+  date: z
+    .string()
+    .describe("Visit date in America/Los_Angeles (Pacific / California)"),
+  time: z
+    .string()
+    .describe("Visit time in America/Los_Angeles (Pacific / California)"),
   notes: z.string().optional(),
 } as const;
 
@@ -94,12 +99,15 @@ export function registerSalonTools(server: McpServer) {
     requireScopes<typeof emptySchema>(["tool:list_appointments"], async (_payload, { authInfo }) => {
       const appointments = await listAppointments(authInfo.extra.sub);
       return text({
+        timezone: "America/Los_Angeles",
         appointments: appointments.map((a) => ({
           id: a.id,
           dog: a.dogName,
           service: getService(a.serviceId)?.name ?? a.serviceId,
           date: a.visitDate,
           time: a.visitTime,
+          when: formatVisitWhen(a.visitDate, a.visitTime),
+          timezone: "America/Los_Angeles",
           status: a.status,
           calendar: a.calendarEventLink,
           ciba: a.cancelCibaStatus,
@@ -132,21 +140,27 @@ export function registerSalonTools(server: McpServer) {
             error: `No dog named ${dogName}. Call add_dog first.`,
           });
         }
+        const when = resolveVisitWhen(date, time);
+        if (!when.ok) {
+          return text({ error: when.error });
+        }
         const appointment = await bookAppointment(authInfo.extra.sub, {
           dogId: dog.id,
           serviceId,
-          visitDate: date,
-          visitTime: time,
+          visitDate: when.date,
+          visitTime: when.time,
           notes,
         });
         return text({
           booked: true,
+          timezone: "America/Los_Angeles",
           appointment: {
             id: appointment.id,
             dog: dog.name,
             service: getService(serviceId)?.name,
-            date,
-            time,
+            date: when.date,
+            time: when.time,
+            when: formatVisitWhen(when.date, when.time),
           },
         });
       },
