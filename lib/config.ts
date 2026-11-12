@@ -12,14 +12,14 @@ export const PRODUCTION_PRM_URL = `${PRODUCTION_ORIGIN}/.well-known/oauth-protec
 
 export const GOOGLE_CONNECTION = "google-oauth2";
 
-/** Calendar write scopes live on Connected Accounts, never on Universal Login. */
-export const GOOGLE_CALENDAR_SCOPES = [
-  "openid",
-  "profile",
-  "email",
-  "offline_access",
-  "https://www.googleapis.com/auth/calendar.events",
-] as const;
+/**
+ * Calendar write scope for Connected Accounts / Token Vault only.
+ * Do not send openid/profile/email/offline_access here — those are login
+ * scopes. Marvel's working Connect URL is a single Calendar API scope.
+ */
+export const GOOGLE_CALENDAR_SCOPE =
+  "https://www.googleapis.com/auth/calendar.events";
+export const GOOGLE_CALENDAR_SCOPES = [GOOGLE_CALENDAR_SCOPE] as const;
 
 export const MCP_SCOPES = [
   "openid",
@@ -156,12 +156,11 @@ export function corsHeaders(): HeadersInit {
 }
 
 export function getGoogleConnectUrl(returnTo = "/chat"): string {
-  const params = new URLSearchParams();
-  params.set("connection", GOOGLE_CONNECTION);
-  params.set("returnTo", returnTo);
-  for (const scope of GOOGLE_CALENDAR_SCOPES) {
-    params.append("scopes", scope);
-  }
+  const params = new URLSearchParams({
+    connection: GOOGLE_CONNECTION,
+    returnTo,
+    scopes: GOOGLE_CALENDAR_SCOPE,
+  });
   return `/auth/connect?${params.toString()}`;
 }
 

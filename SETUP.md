@@ -80,10 +80,10 @@ On the **Google** social connection:
 2. Allow the extra scope `https://www.googleapis.com/auth/calendar.events` for connected-account linking — **not** as a default Universal Login scope.
 3. Google Cloud OAuth client used by that connection must include the Calendar API and that scope.
 
-The app links Calendar with:
+The app links Calendar with (Calendar events scope only — same pattern as Marvel; login already has `openid profile email offline_access`):
 
 ```
-/auth/connect?connection=google-oauth2&returnTo=/chat&scopes=openid&scopes=profile&scopes=email&scopes=offline_access&scopes=https://www.googleapis.com/auth/calendar.events
+/auth/connect?connection=google-oauth2&returnTo=/chat&scopes=https://www.googleapis.com/auth/calendar.events
 ```
 
 SDK: `enableConnectAccountEndpoint: true` and `getAccessTokenForConnection({ connection: "google-oauth2" })`.
