@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { createMcpHandler, withMcpAuth } from "mcp-handler";
 import { verifyMcpToken } from "@/lib/mcp/auth";
 import { registerSalonTools } from "@/lib/mcp/tools";
-import { corsHeaders, mcpServerUrl } from "@/lib/config";
+import { corsHeaders } from "@/lib/config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,8 +35,10 @@ const authHandler = withMcpAuth(
   },
   {
     required: true,
-    resourceMetadataPath: "/.well-known/oauth-protected-resource",
-    resourceUrl: mcpServerUrl(),
+    // RFC 9728 inserts well-known between host and the /mcp path.
+    // Do not pass resourceUrl: mcpServerUrl() — withMcpAuth treats that as
+    // an origin and emits /mcp/.well-known/... (we still serve that alias).
+    resourceMetadataPath: "/.well-known/oauth-protected-resource/mcp",
   },
 );
 

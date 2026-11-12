@@ -133,9 +133,10 @@ Docs: [Configure CIBA](https://auth0.com/docs/get-started/applications/configure
 7. Protected resource metadata is served at:
 
    - `/.well-known/oauth-protected-resource`
-   - `/.well-known/oauth-protected-resource/mcp`
+   - `/.well-known/oauth-protected-resource/mcp` (RFC 9728 path form for `/mcp`)
+   - `/mcp/.well-known/oauth-protected-resource` (alias some MCP 401 headers follow)
 
-   JWKS: `https://<AUTH0_DOMAIN>/.well-known/jwks.json`. Authorization server: `https://<AUTH0_DOMAIN>/`.
+   JWKS: `https://<AUTH0_DOMAIN>/.well-known/jwks.json`. Authorization server: `https://<AUTH0_DOMAIN>/`. A 401 from `/mcp` advertises the RFC 9728 URL in `WWW-Authenticate` `resource_metadata`; that URL must 200 JSON.
 
 Docs: [Auth0 for MCP](https://auth0.com/ai/docs) · sample [auth0-ai-samples / nextjs-mcp-js](https://github.com/auth0-lab/auth0-ai-samples).
 
