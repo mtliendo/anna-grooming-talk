@@ -140,7 +140,7 @@ export function ChatClient({
               : "We pause before asking Google for calendar access. Login never included it."}
           </p>
           {email ? <p className="faint">Connect as {email}</p> : null}
-          <a className="btn btn-primary" href={getGoogleConnectUrl("/chat")}>
+          <a className="btn btn-primary btn-block" href={getGoogleConnectUrl("/chat")}>
             {snapshot.googleConnected ? "Reconnect" : "Connect Google Calendar"}
           </a>
         </div>

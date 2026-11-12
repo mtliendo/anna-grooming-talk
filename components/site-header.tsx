@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { PawMark } from "@/components/icons";
 
 type HeaderUser = {
   name?: string | null;
@@ -22,6 +23,9 @@ export function SiteHeader({
     <header className="site-header">
       <div className="shell nav">
         <Link href="/" className="brand">
+          <span className="brand-paw" aria-hidden>
+            <PawMark size={26} />
+          </span>
           <span className="brand-name">Anna&apos;s Dog Grooming</span>
         </Link>
 
@@ -34,12 +38,6 @@ export function SiteHeader({
           </Link>
           <Link className={`nav-link${path.startsWith("/chat") ? " active" : ""}`} href="/chat">
             Message
-          </Link>
-          <Link
-            className={`nav-link nav-link-quiet${path.startsWith("/connect") ? " active" : ""}`}
-            href="/connect"
-          >
-            MCP
           </Link>
         </nav>
 

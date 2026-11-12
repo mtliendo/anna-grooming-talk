@@ -35,7 +35,7 @@ export default async function HomePage() {
             Your dogs and visits live on this account. Book a table, message the
             salon, or connect a calendar when you&apos;re ready.
           </p>
-          <div className="path-grid">
+          <div className="path-grid path-grid-2">
             <Link href="/book" className="path-card">
               <h2>Book a visit</h2>
               <p>Register a dog and pick Bath &amp; Brush, Full Groom, or Nail Trim.</p>
@@ -43,10 +43,6 @@ export default async function HomePage() {
             <Link href="/chat" className="path-card">
               <h2>Message the salon</h2>
               <p>Same book, in conversation. Calendar waits for your say-so.</p>
-            </Link>
-            <Link href="/connect" className="path-card">
-              <h2>Other tools</h2>
-              <p>MCP endpoint for assistants. Quiet, on purpose.</p>
             </Link>
           </div>
         </div>

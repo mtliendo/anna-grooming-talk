@@ -17,7 +17,9 @@ export default async function ChatPage() {
     <div className="shell page">
       <header className="page-head">
         <p className="eyebrow">Front desk</p>
-        <h1 className="display display-lg">Message the salon</h1>
+        <h1 className="display display-lg">
+          Message the <em>salon</em>
+        </h1>
         <p className="lede">
           Tell us who needs a bath. We&apos;ll book the same visits as the form.
           Calendar access and cancellations both pause for you — never a silent

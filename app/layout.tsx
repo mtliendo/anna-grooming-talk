@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { Fraunces, Fredoka, JetBrains_Mono, Nunito } from "next/font/google";
 import { SiteHeader } from "@/components/site-header";
 import { getSessionSafe } from "@/lib/auth0";
 import { APP_BASE_URL, isAuth0Configured } from "@/lib/config";
@@ -9,9 +9,16 @@ const display = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
+  style: ["normal", "italic"],
 });
 
-const sans = Plus_Jakarta_Sans({
+const bubble = Fredoka({
+  subsets: ["latin"],
+  variable: "--font-bubble",
+  display: "swap",
+});
+
+const sans = Nunito({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -50,14 +57,18 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+      <body
+        className={`${display.variable} ${bubble.variable} ${sans.variable} ${mono.variable}`}
+      >
         <SiteHeader user={session?.user} configured={configured} />
         <main>{children}</main>
         <footer className="footer">
           <div className="shell footer-row">
             <span>Anna&apos;s Dog Grooming</span>
             <span>Tue–Sat · 9–5 · by appointment</span>
-            <LinkQuiet />
+            <a className="footer-mcp" href="/connect">
+              MCP
+            </a>
           </div>
         </footer>
       </body>
@@ -65,8 +76,3 @@ export default async function RootLayout({
   );
 }
 
-function LinkQuiet() {
-  return (
-    <a href="/connect">MCP</a>
-  );
-}

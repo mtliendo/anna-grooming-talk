@@ -5,6 +5,11 @@ export const APP_BASE_URL = (
     : "http://localhost:3000")
 ).replace(/\/$/, "");
 
+/** Canonical talk URLs shown to clients. Never localhost or a preview host. */
+export const PRODUCTION_ORIGIN = "https://anna-grooming-talk.vercel.app";
+export const PRODUCTION_MCP_URL = `${PRODUCTION_ORIGIN}/mcp`;
+export const PRODUCTION_PRM_URL = `${PRODUCTION_ORIGIN}/.well-known/oauth-protected-resource`;
+
 export const GOOGLE_CONNECTION = "google-oauth2";
 
 /** Calendar write scopes live on Connected Accounts, never on Universal Login. */
