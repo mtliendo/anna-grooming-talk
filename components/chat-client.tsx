@@ -18,6 +18,7 @@ export function ChatClient({
   const [snapshot, setSnapshot] = useState(initial);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
+  const [resetting, setResetting] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const messages = snapshot.messages ?? [];
 
@@ -43,6 +44,26 @@ export function ChatClient({
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
+
+  async function startNewChat() {
+    if (resetting || sending) return;
+    setResetting(true);
+    setDraft("");
+    setSnapshot((prev) => ({ ...prev, messages: [] }));
+    try {
+      const res = await fetch("/api/chat", { method: "DELETE" });
+      if (res.ok) {
+        const next = (await res.json()) as SalonSnapshot;
+        setSnapshot(next);
+      } else {
+        await refresh();
+      }
+    } catch {
+      await refresh();
+    } finally {
+      setResetting(false);
+    }
+  }
 
   async function send() {
     const text = draft.trim();
@@ -79,11 +100,23 @@ export function ChatClient({
   return (
     <div className="chat-shell">
       <section className="card card-pad">
-        <p className="eyebrow">Front desk</p>
-        <h2 className="card-title">Tell us who needs a bath</h2>
-        <p className="muted">
-          Pacific time. One small question at a time — say tomorrow at 11:30.
-        </p>
+        <div className="panel-head chat-card-head">
+          <div>
+            <p className="eyebrow">Front desk</p>
+            <h2 className="card-title">Tell us who needs a bath</h2>
+            <p className="muted">
+              Pacific time. One small question at a time — say tomorrow at 11:30.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => void startNewChat()}
+            disabled={resetting || sending}
+          >
+            {resetting ? "Starting…" : "Start new chat"}
+          </button>
+        </div>
 
         <div className="chat-log" style={{ marginTop: 14 }}>
           {messages.length === 0 ? (
@@ -125,10 +158,10 @@ export function ChatClient({
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             placeholder="Book a groom, add it to the calendar, or cancel…"
-            disabled={sending}
+            disabled={sending || resetting}
             aria-label="Message Anna's assistant"
           />
-          <button className="btn btn-primary" type="submit" disabled={sending}>
+          <button className="btn btn-primary" type="submit" disabled={sending || resetting}>
             {sending ? "Thinking…" : "Send"}
           </button>
         </form>
