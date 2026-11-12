@@ -77,13 +77,10 @@ export function ChatClient({
   return (
     <div className="chat-shell">
       <section className="card card-pad">
-        <p className="badge">Front desk</p>
-        <h2 className="card-title" style={{ marginTop: 10 }}>
-          Book with the assistant
-        </h2>
+        <p className="eyebrow">Front desk</p>
+        <h2 className="card-title">Tell us who needs a bath</h2>
         <p className="muted">
-          Same dogs and visits as the classic form — gathered in conversation.
-          Calendar and cancel each pause for a human.
+          Same dogs and visits as the form. Calendar and cancel each wait for you.
         </p>
 
         <div className="chat-log" style={{ marginTop: 18 }}>
@@ -94,9 +91,7 @@ export function ChatClient({
           ) : (
             messages.map((message) => (
               <div key={message.id}>
-                <div className={`bubble ${message.role}`}>
-                  {message.content}
-                </div>
+                <div className={`bubble ${message.role}`}>{message.content}</div>
                 {message.meta?.kind === "token_vault" ? (
                   <TokenVaultPause
                     connectUrl={message.meta.connectUrl ?? getGoogleConnectUrl("/chat")}
@@ -121,7 +116,7 @@ export function ChatClient({
           <input
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
-            placeholder="Ask to book, add to calendar, or cancel…"
+            placeholder="Book a groom, add it to the calendar, or cancel…"
             disabled={sending}
             aria-label="Message Anna's assistant"
           />
@@ -134,27 +129,25 @@ export function ChatClient({
       <aside className="stack">
         <div className={`card card-pad ${snapshot.googleConnected ? "card-sage" : "card-amber"}`}>
           <p className={snapshot.googleConnected ? "badge badge-sage" : "badge badge-terracotta"}>
-            {snapshot.googleConnected ? "Token Vault ready" : "Calendar locked"}
+            {snapshot.googleConnected ? "Calendar connected" : "Calendar locked"}
           </p>
           <h2 className="card-title" style={{ marginTop: 10 }}>
             Google Calendar
           </h2>
           <p className="muted">
             {snapshot.googleConnected
-              ? "The assistant can write an event after you say yes."
-              : "The assistant must pause and ask before Token Vault expands Calendar scopes."}
+              ? "We can put the visit on your calendar after you say yes."
+              : "We pause before asking Google for calendar access. Login never included it."}
           </p>
-          {email ? <p className="faint">Hint: {email}</p> : null}
+          {email ? <p className="faint">Connect as {email}</p> : null}
           <a className="btn btn-primary" href={getGoogleConnectUrl("/chat")}>
             {snapshot.googleConnected ? "Reconnect" : "Connect Google Calendar"}
           </a>
         </div>
 
         <div className="card card-pad">
-          <p className="badge">On the book</p>
-          <h2 className="card-title" style={{ marginTop: 10 }}>
-            {snapshot.appointments.length} upcoming
-          </h2>
+          <p className="eyebrow">On the book</p>
+          <h2 className="card-title">{snapshot.appointments.length} upcoming</h2>
           {snapshot.appointments.length === 0 ? (
             <p className="faint">Nothing booked yet.</p>
           ) : (
@@ -168,7 +161,7 @@ export function ChatClient({
                     {a.visitDate} at {a.visitTime}
                   </span>
                   {a.status === "cancel_pending" ? (
-                    <span className="badge badge-terracotta">CIBA pending</span>
+                    <span className="badge badge-terracotta">Waiting on email</span>
                   ) : null}
                 </div>
               ))}
@@ -182,15 +175,12 @@ export function ChatClient({
 
 function TokenVaultPause({ connectUrl }: { connectUrl: string }) {
   return (
-    <div className="card card-pad card-amber" style={{ marginTop: 10, maxWidth: "85%" }}>
-      <p className="badge badge-terracotta">Human in the loop · Token Vault</p>
-      <h3 className="card-title" style={{ marginTop: 10 }}>
-        Extra Google Calendar permission
-      </h3>
+    <div className="hitl hitl-vault">
+      <p className="badge badge-terracotta">Needs your say-so</p>
+      <h3>Connect Google Calendar</h3>
       <p className="muted">
-        The assistant paused. Login did not include Calendar scopes. Connect
-        Google Calendar through Auth0 Connected Accounts so Token Vault can
-        hold the Google token — this app never stores it.
+        Sign-in did not include calendar access. Connect Google Calendar so we
+        can write the visit — this salon never stores that token.
       </p>
       <a className="btn btn-primary" href={connectUrl}>
         Connect Google Calendar
@@ -201,14 +191,12 @@ function TokenVaultPause({ connectUrl }: { connectUrl: string }) {
 
 function CibaPause({ bindingMessage }: { bindingMessage?: string }) {
   return (
-    <div className="card card-pad card-danger" style={{ marginTop: 10, maxWidth: "85%" }}>
-      <p className="badge badge-danger">Human in the loop · CIBA</p>
-      <h3 className="card-title" style={{ marginTop: 10 }}>
-        Check your email to confirm cancellation
-      </h3>
+    <div className="hitl hitl-ciba">
+      <p className="badge badge-danger">Check your email</p>
+      <h3>Confirm this cancellation</h3>
       <p className="muted">
-        Auth0 sent a Client-Initiated Backchannel Authentication request.
-        The appointment stays on the book until you Accept in that email.
+        We emailed you to confirm. The appointment stays on the book until you
+        accept in that email.
         {bindingMessage ? (
           <>
             {" "}

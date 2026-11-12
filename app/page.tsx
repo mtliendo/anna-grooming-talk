@@ -8,7 +8,11 @@ export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   if (!isAuth0Configured()) {
-    return <SetupChecklist items={getEnvChecklist()} />;
+    return (
+      <div className="shell page">
+        <SetupChecklist items={getEnvChecklist()} />
+      </div>
+    );
   }
 
   const session = await getSessionSafe();
@@ -20,40 +24,33 @@ export default async function HomePage() {
 
   return (
     <>
-      <section style={{ marginBottom: 22 }}>
-        <p className="badge badge-sage">Signed in with Auth0</p>
-        <h1 className="display display-lg" style={{ marginTop: 12 }}>
-          Welcome back{first ? `, ${first}` : ""}.
-        </h1>
-        <p className="lede">
-          Every dog and visit is scoped to{" "}
-          <span className="mono">{session.user.sub}</span>. Walk the talk in
-          order: classic form, chatbot, Token Vault, MCP, then CIBA cancel.
-        </p>
+      <WelcomeHero />
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="shell signed-in-intro">
+          <p className="eyebrow">Signed in</p>
+          <h2 className="display display-lg">
+            Welcome back{first ? `, ${first}` : ""}.
+          </h2>
+          <p className="lede">
+            Your dogs and visits live on this account. Book a table, message the
+            salon, or connect a calendar when you&apos;re ready.
+          </p>
+          <div className="path-grid">
+            <Link href="/book" className="path-card">
+              <h2>Book a visit</h2>
+              <p>Register a dog and pick Bath &amp; Brush, Full Groom, or Nail Trim.</p>
+            </Link>
+            <Link href="/chat" className="path-card">
+              <h2>Message the salon</h2>
+              <p>Same book, in conversation. Calendar waits for your say-so.</p>
+            </Link>
+            <Link href="/connect" className="path-card">
+              <h2>Other tools</h2>
+              <p>MCP endpoint for assistants. Quiet, on purpose.</p>
+            </Link>
+          </div>
+        </div>
       </section>
-      <div className="grid-3">
-        <Link href="/book" className="card card-pad">
-          <p className="badge">Beat 2</p>
-          <h2 className="card-title" style={{ marginTop: 10 }}>
-            Classic book
-          </h2>
-          <p className="muted">The traditional form Anna already had.</p>
-        </Link>
-        <Link href="/chat" className="card card-pad">
-          <p className="badge">Beats 3–4</p>
-          <h2 className="card-title" style={{ marginTop: 10 }}>
-            Chat + Token Vault
-          </h2>
-          <p className="muted">Conversational booking, then a Calendar pause.</p>
-        </Link>
-        <Link href="/connect" className="card card-pad">
-          <p className="badge">Beats 5–6</p>
-          <h2 className="card-title" style={{ marginTop: 10 }}>
-            MCP + CIBA
-          </h2>
-          <p className="muted">Grok Bot lists, books, and cancels with email confirmation.</p>
-        </Link>
-      </div>
     </>
   );
 }

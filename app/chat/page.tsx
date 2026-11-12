@@ -1,5 +1,4 @@
 import { ChatClient } from "@/components/chat-client";
-import { TalkBeats } from "@/components/talk-beats";
 import { getSessionSafe } from "@/lib/auth0";
 import { isAuth0Configured } from "@/lib/config";
 import { loadSalonSnapshot } from "@/lib/salon";
@@ -15,19 +14,17 @@ export default async function ChatPage() {
   const snapshot = await loadSalonSnapshot(session.user.sub, { includeChat: true });
 
   return (
-    <>
-      <TalkBeats active="chat" />
-      <section style={{ marginBottom: 22 }}>
-        <p className="badge">Beats 3 &amp; 4</p>
-        <h1 className="display display-lg" style={{ marginTop: 12 }}>
-          The assistant Anna hired
-        </h1>
+    <div className="shell page">
+      <header className="page-head">
+        <p className="eyebrow">Front desk</p>
+        <h1 className="display display-lg">Message the salon</h1>
         <p className="lede">
-          Book in conversation. When the agent wants Calendar, it pauses for
-          Token Vault. Cancel still waits on CIBA email — never a chat-only yes.
+          Tell us who needs a bath. We&apos;ll book the same visits as the form.
+          Calendar access and cancellations both pause for you — never a silent
+          yes.
         </p>
-      </section>
+      </header>
       <ChatClient initial={snapshot} email={session.user.email} />
-    </>
+    </div>
   );
 }

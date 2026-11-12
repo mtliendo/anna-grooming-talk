@@ -1,54 +1,112 @@
+import Link from "next/link";
 import { GROOMING_SERVICES, formatDuration, formatPrice } from "@/lib/services";
-import { TalkBeats } from "@/components/talk-beats";
+
+const SERVICES = [
+  { ...GROOMING_SERVICES[0], photo: "/photos/service-bath.jpg", alt: "A spaniel in a warm bath" },
+  { ...GROOMING_SERVICES[1], photo: "/photos/service-cut.jpg", alt: "A doodle on the grooming table" },
+  { ...GROOMING_SERVICES[2], photo: "/photos/service-nails.jpg", alt: "Nail trim and paw balm" },
+] as const;
 
 export function WelcomeHero() {
   return (
     <>
-      <TalkBeats active="login" />
-      <section className="hero">
-        <div>
-          <p className="badge badge-terracotta">Focus Otter · Auth0</p>
-          <h1 className="display display-xl" style={{ marginTop: 16 }}>
-            Trust the agent. Verify the human.
-          </h1>
-          <p className="lede">
-            Anna hired you to modernize the salon. First the classic book — then a
-            chatbot, Token Vault for Google Calendar, an Auth0-protected MCP
-            server, and real CIBA email before any cancellation lands.
-          </p>
-          <div className="row">
-            <a className="btn btn-primary" href="/auth/login?returnTo=/book">
-              Sign in
-            </a>
-            <a
-              className="btn btn-ghost"
-              href="/auth/login?screen_hint=signup&returnTo=/book"
-            >
-              Create a customer account
-            </a>
-            <a className="btn btn-ghost" href="/auth/login?connection=google-oauth2&returnTo=/book">
-              Continue with Google
-            </a>
+      <section className="home-hero">
+        <figure className="hero-photo">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/dogs/mabel.jpg"
+            alt="Mabel, a mini Bernedoodle standing on a wooden deck with muddy legs, paws, and face"
+            width={1980}
+            height={3520}
+          />
+          <figcaption className="hero-caption">Mabel · she needs a groom</figcaption>
+        </figure>
+        <div className="hero-copy">
+          <div className="hero-card">
+            <p className="eyebrow">Neighborhood salon</p>
+            <h1 className="display display-xl">
+              Come in muddy.
+              <br />
+              Leave looking
+              <br />
+              like yourself.
+            </h1>
+            <p className="lede">
+              Baths, trims, and full grooms — one dog at a time, by appointment.
+            </p>
+            <div className="cta-row">
+              <Link className="btn btn-primary" href="/book">
+                Book an appointment
+              </Link>
+              <Link className="btn btn-ghost" href="/chat">
+                Message the salon
+              </Link>
+            </div>
           </div>
         </div>
-        <div className="card card-pad">
-          <p className="badge">Today&apos;s menu</p>
-          <h2 className="card-title" style={{ marginTop: 12 }}>
-            Three services. One identity.
-          </h2>
-          <div className="stack" style={{ marginTop: 14 }}>
-            {GROOMING_SERVICES.map((service) => (
-              <div key={service.id} className="service-tile">
-                <strong>{service.name}</strong>
-                <span className="muted">
-                  {formatPrice(service.price)} · {formatDuration(service.durationMin)}
-                </span>
-                <p className="faint" style={{ margin: "6px 0 0" }}>
-                  {service.blurb}
-                </p>
-              </div>
+      </section>
+
+      <section className="section">
+        <div className="shell">
+          <div className="section-head">
+            <p className="eyebrow">The book</p>
+            <h2>What we do</h2>
+            <p className="muted" style={{ margin: 0 }}>
+              Three visits. No upsells hiding in the back room.
+            </p>
+          </div>
+          <div className="menu-grid">
+            {SERVICES.map((service) => (
+              <article key={service.id} className="menu-item">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={service.photo} alt={service.alt} />
+                <div className="menu-body">
+                  <h3>{service.name}</h3>
+                  <p>{service.blurb}</p>
+                  <div className="menu-meta">
+                    <span>{formatPrice(service.price)}</span>
+                    <span>{formatDuration(service.durationMin)}</span>
+                  </div>
+                </div>
+              </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="regular">
+        <figure className="regular-photo">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/dogs/drake.jpg"
+            alt="Drake, a merle dog lying on sunlit hardwood, looking at the camera"
+            width={4284}
+            height={5712}
+          />
+          <figcaption className="hero-caption">Drake</figcaption>
+        </figure>
+        <div className="regular-copy">
+          <p className="eyebrow">A regular</p>
+          <h2 className="display display-lg">Drake, after.</h2>
+          <p className="lede">
+            Handsome, unhurried, just been loved. This is the feeling we send
+            out the door — not a costume cut, just the dog you already know.
+          </p>
+        </div>
+      </section>
+
+      <section className="visit-band">
+        <div className="shell">
+          <p className="eyebrow">By appointment</p>
+          <h2 className="display display-lg">Tuesday through Saturday, 9 to 5.</h2>
+          <p className="lede">
+            Register your dog, pick a service, and we&apos;ll hold the table.
+            Cancellations wait on an email from you — we never drop a visit
+            on a chat &ldquo;yes.&rdquo;
+          </p>
+          <Link className="btn btn-primary" href="/book">
+            Book an appointment
+          </Link>
         </div>
       </section>
     </>

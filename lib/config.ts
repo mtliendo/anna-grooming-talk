@@ -167,12 +167,3 @@ export function getCallbackUrl(): string {
 export function getLogoutUrl(): string {
   return APP_BASE_URL;
 }
-
-export const TALK_BEATS = [
-  { n: 1, slug: "login", label: "Sign in", href: "/" },
-  { n: 2, slug: "form", label: "Classic book", href: "/book" },
-  { n: 3, slug: "chat", label: "Chat booking", href: "/chat" },
-  { n: 4, slug: "vault", label: "Token Vault", href: "/chat" },
-  { n: 5, slug: "mcp", label: "MCP", href: "/connect" },
-  { n: 6, slug: "ciba", label: "CIBA cancel", href: "/book" },
-] as const;

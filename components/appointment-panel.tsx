@@ -20,13 +20,11 @@ export function AppointmentPanel({
 }) {
   return (
     <section className="card card-pad">
-      <p className="badge">The book</p>
-      <h2 className="card-title" style={{ marginTop: 10 }}>
-        Grooming appointments
-      </h2>
+      <p className="eyebrow">Appointments</p>
+      <h2 className="card-title">Hold a table</h2>
       <p className="muted">
-        The &ldquo;before&rdquo; — a traditional form. Cancel still goes through{" "}
-        <strong>CIBA email</strong>: the visit stays until the customer Accepts.
+        Cancel sends an email confirmation. The visit stays on the book until
+        you accept — we never drop it from a chat yes.
       </p>
 
       <form action={bookAppointmentAction} className="stack" style={{ marginTop: 18 }}>
@@ -92,7 +90,7 @@ export function AppointmentPanel({
                     {appointment.dogName} · {service?.name ?? appointment.serviceId}
                   </strong>
                   {pending ? (
-                    <span className="badge badge-terracotta">Waiting for email confirmation</span>
+                    <span className="badge badge-terracotta">Waiting for email</span>
                   ) : (
                     <form action={cancelAppointmentAction}>
                       <input type="hidden" name="appointmentId" value={appointment.id} />
@@ -106,7 +104,7 @@ export function AppointmentPanel({
                   {appointment.visitDate} at {appointment.visitTime}
                   {service ? ` · ${formatServiceLine(service)}` : null}
                 </div>
-                {appointment.notes ? <p className="faint">{appointment.notes}</p> : null}
+                {appointment.notes ? <p className="faint" style={{ margin: 0 }}>{appointment.notes}</p> : null}
                 {appointment.calendarEventLink ? (
                   <a
                     className="badge badge-sage"
@@ -114,13 +112,12 @@ export function AppointmentPanel({
                     target="_blank"
                     rel="noreferrer"
                   >
-                    On Google Calendar ↗
+                    On Google Calendar
                   </a>
                 ) : null}
                 {pending ? (
                   <p className="faint" style={{ margin: 0 }}>
-                    Auth0 emailed a CIBA request. This visit is still on the book
-                    until you Accept.
+                    We emailed you to confirm. This visit stays until you accept.
                   </p>
                 ) : null}
               </article>

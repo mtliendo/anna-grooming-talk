@@ -1,7 +1,6 @@
 import { AppointmentPanel } from "@/components/appointment-panel";
 import { CibaBookPoller } from "@/components/ciba-book-poller";
 import { DogPanel } from "@/components/dog-panel";
-import { TalkBeats } from "@/components/talk-beats";
 import { getSessionSafe } from "@/lib/auth0";
 import { isAuth0Configured } from "@/lib/config";
 import { loadSalonSnapshot } from "@/lib/salon";
@@ -20,23 +19,21 @@ export default async function BookPage() {
   );
 
   return (
-    <>
+    <div className="shell page">
       <CibaBookPoller active={cibaPending} />
-      <TalkBeats active="form" />
-      <section style={{ marginBottom: 22 }}>
-        <p className="badge">Beat 2 · the before</p>
-        <h1 className="display display-lg" style={{ marginTop: 12 }}>
-          Anna&apos;s original book
-        </h1>
+      <header className="page-head">
+        <p className="eyebrow">The book</p>
+        <h1 className="display display-lg">Book a visit</h1>
         <p className="lede">
-          Register dogs and book Bath &amp; Brush, Full Groom, or Nail Trim.
-          Then hire the presenter to add a chatbot, Token Vault, MCP, and CIBA.
+          Register your dogs, then choose Bath &amp; Brush, Full Groom, or Nail
+          Trim. If you cancel, we email you first — the visit stays until you
+          accept.
         </p>
-      </section>
+      </header>
       <div className="grid-2">
         <DogPanel dogs={snapshot.dogs} />
         <AppointmentPanel dogs={snapshot.dogs} appointments={snapshot.appointments} />
       </div>
-    </>
+    </div>
   );
 }

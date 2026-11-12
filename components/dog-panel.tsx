@@ -5,12 +5,10 @@ import { SAMPLE_DOG } from "@/lib/services";
 export function DogPanel({ dogs }: { dogs: Dog[] }) {
   return (
     <section className="card card-pad">
-      <div className="row" style={{ justifyContent: "space-between" }}>
+      <div className="panel-head">
         <div>
-          <p className="badge">Your dogs</p>
-          <h2 className="card-title" style={{ marginTop: 10 }}>
-            The roster
-          </h2>
+          <p className="eyebrow">Your dogs</p>
+          <h2 className="card-title">On the roster</h2>
         </div>
         <form action={addSampleDogAction}>
           <button className="btn btn-ghost btn-small" type="submit">
@@ -21,7 +19,7 @@ export function DogPanel({ dogs }: { dogs: Dog[] }) {
 
       {dogs.length === 0 ? (
         <div className="empty" style={{ marginTop: 16 }}>
-          No dogs yet. Register one below, or add Barnaby in one click for the live demo.
+          No dogs yet. Add one below, or add Barnaby in one click.
         </div>
       ) : (
         <div className="stack" style={{ marginTop: 16 }}>
@@ -39,7 +37,7 @@ export function DogPanel({ dogs }: { dogs: Dog[] }) {
                   </button>
                 </form>
               </div>
-              {dog.notes ? <p className="faint">{dog.notes}</p> : null}
+              {dog.notes ? <p className="faint" style={{ margin: 0 }}>{dog.notes}</p> : null}
             </article>
           ))}
         </div>

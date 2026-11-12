@@ -25,18 +25,18 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_BASE_URL),
-  title: "Anna's Dog Grooming — Trust, but Verify",
+  title: "Anna's Dog Grooming",
   description:
-    "Talk demo: Auth0 login, classic booking, chatbot, Token Vault, MCP, and real CIBA cancellation.",
+    "Neighborhood baths, trims, and full grooms. Book a visit — one dog at a time.",
   openGraph: {
-    title: "Anna's Dog Grooming — Trust, but Verify",
+    title: "Anna's Dog Grooming",
     description:
-      "Auth0 for AI Agents talk demo by Focus Otter: Token Vault, MCP, and CIBA.",
-    images: ["/og.jpg"],
+      "Baths, trims, and full grooms for dogs who come in muddy and leave looking like themselves.",
+    images: ["/dogs/mabel.jpg"],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/og.jpg"],
+    images: ["/dogs/mabel.jpg"],
   },
 };
 
@@ -52,14 +52,21 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${display.variable} ${sans.variable} ${mono.variable}`}>
         <SiteHeader user={session?.user} configured={configured} />
-        <main className="shell page">{children}</main>
+        <main>{children}</main>
         <footer className="footer">
           <div className="shell footer-row">
-            <span>Anna&apos;s Dog Grooming · Trust, but Verify</span>
-            <span>Auth0 talk demo by Michael Liendo · @focusotter</span>
+            <span>Anna&apos;s Dog Grooming</span>
+            <span>Tue–Sat · 9–5 · by appointment</span>
+            <LinkQuiet />
           </div>
         </footer>
       </body>
     </html>
+  );
+}
+
+function LinkQuiet() {
+  return (
+    <a href="/connect">MCP</a>
   );
 }

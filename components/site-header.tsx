@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PawMark } from "@/components/icons";
 
 type HeaderUser = {
   name?: string | null;
@@ -23,16 +22,10 @@ export function SiteHeader({
     <header className="site-header">
       <div className="shell nav">
         <Link href="/" className="brand">
-          <span className="brand-mark">
-            <PawMark size={20} />
-          </span>
-          <span className="brand-copy">
-            <span className="brand-kicker">Trust, but Verify</span>
-            <span className="brand-name">Anna&apos;s Dog Grooming</span>
-          </span>
+          <span className="brand-name">Anna&apos;s Dog Grooming</span>
         </Link>
 
-        <nav className="nav-links" aria-label="Talk demo">
+        <nav className="nav-links" aria-label="Salon">
           <Link className={`nav-link${path === "/" ? " active" : ""}`} href="/">
             Home
           </Link>
@@ -40,9 +33,12 @@ export function SiteHeader({
             Book
           </Link>
           <Link className={`nav-link${path.startsWith("/chat") ? " active" : ""}`} href="/chat">
-            Chat
+            Message
           </Link>
-          <Link className={`nav-link${path.startsWith("/connect") ? " active" : ""}`} href="/connect">
+          <Link
+            className={`nav-link nav-link-quiet${path.startsWith("/connect") ? " active" : ""}`}
+            href="/connect"
+          >
             MCP
           </Link>
         </nav>
@@ -54,28 +50,28 @@ export function SiteHeader({
             <>
               {user.picture ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img className="avatar" src={user.picture} alt={user.name ?? "Signed-in customer"} />
+                <img
+                  className="avatar"
+                  src={user.picture}
+                  alt={user.name ?? "Signed-in customer"}
+                />
               ) : (
-                <span className="avatar" />
+                <span className="avatar" aria-hidden />
               )}
               <span className="user-meta">
                 <span className="user-email">{user.email ?? user.name}</span>
-                {user.sub ? <span className="sub-chip">{user.sub}</span> : null}
               </span>
-              <a className="btn btn-ghost btn-small" href="/auth/logout">
+              <a className="btn btn-text btn-small" href="/auth/logout">
                 Sign out
               </a>
             </>
           ) : (
             <>
-              <a className="btn btn-ghost btn-small" href="/auth/login?returnTo=/book">
+              <a className="btn btn-text btn-small" href="/auth/login?returnTo=/book">
                 Sign in
               </a>
-              <a
-                className="btn btn-primary btn-small"
-                href="/auth/login?screen_hint=signup&returnTo=/book"
-              >
-                Sign up
+              <a className="btn btn-primary btn-small" href="/book">
+                Book
               </a>
             </>
           )}
